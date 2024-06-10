@@ -2,7 +2,7 @@
 
 `hexo-safego` 是一个改进版的 Hexo 插件，用于处理外部链接以增强博客的安全性。该插件基于 [`hexo-external-link`](https://github.com/hvnobug/hexo-external-link) 二次开发，但其实现方式不同：原版插件通过注入 JS ，在打开网站时才处理外部链接，而 `hexo-safego` 则在生成静态页面时直接替换外部链接，并且提供了很多人性化的配置。
 
-**注意：该插件暂时并不完善，仍在实验阶段，如果无基础建议选择同类替代产品，如：[安全跳转页面重制版](https://blog.qyliu.top/posts/9efc1657/)。如果感兴趣，欢迎pr！**
+**注意：该插件由于发版，暂时并不完善，仍在测试阶段，如果无法运行，可以选择同类替代产品，如：[安全跳转页面重制版](https://blog.qyliu.top/posts/9efc1657/)，后面会推出兼容性良好的版本，如果感兴趣可以star以关注后续更新！**
 
 ### 主要特性
 
@@ -31,22 +31,22 @@ npm install hexo-safego --save
 
 ```yaml
 hexo_safego:
-  enable: true  				# 是否启用 hexo-safego 插件
-  enable_base64_encode: true  	# 是否启用 Base64 编码链接
-  url_param_name: 'u'  			# URL 参数名，用于生成跳转链接
-  html_file_name: 'go.html' 	# 跳转页面文件名
-  target_blank: true  			# 是否在跳转链接中添加 target="_blank"
+  enable: true  # 是否启用 hexo-safego 插件
+  enable_base64_encode: true  # 是否启用 Base64 编码链接
+  url_param_name: 'u'  # URL 参数名，用于生成跳转链接
+  html_file_name: 'go.html' # 跳转页面文件名
+  target_blank: true  # 是否在跳转链接中添加 target="_blank"
   link_rel: 'external nofollow noopener noreferrer' # 跳转链接的 rel 属性
-  ignore_attrs:  				# 需要忽略的链接属性列表
+  ignore_attrs: # 需要忽略的链接属性列表
     - 'data-fancybox'
     - 'ignore-external-link'
-  container_ids:  				# 容器 ID 列表，如果为空则匹配整个 body
+  container_ids: # 容器 ID 列表，如果为空则匹配整个 body，暂时仅支持ID匹配
     - 'article-container'
-  domain_whitelist:  			# 域名白名单列表，包含在白名单中的域名的链接将被忽略
+  domain_whitelist: # 域名白名单列表，包含白名单中的域名的链接将被忽略
     - 'qyliu.top'
-  apply_pages:  				# 生效页面路径列表，只有在这些页面上才会对链接进行处理
+  apply_pages: # 生效页面路径列表，只有在这些页面上才会对链接进行处理
     - '/posts/'
-  debug: false  				# 是否启用调试模式，开启后会输出详细的调试信息
+  debug: false # 是否启用调试模式，开启后会输出详细的调试信息
 ```
 
 ### 参数说明
