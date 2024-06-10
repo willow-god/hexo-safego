@@ -1,0 +1,36 @@
+{
+  "name": "hexo-safego",
+  "version": "1.0.0",
+  "description": "Hexo plugin for safe external link redirection with base64 encoding and domain whitelisting",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/willow-god/hexo-safego.git"
+  },
+  "keywords": [
+    "hexo",
+    "plugin",
+    "external-link",
+    "safego",
+    "base64"
+  ],
+  "files": [
+    "go.html",
+    "index.js",
+    "lib/"
+  ],
+  "author": "willow-god",
+  "email": "01@liushen.fun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/willow-god/hexo-safego/issues"
+  },
+  "homepage": "https://github.com/willow-god/hexo-safego#readme"
+}
