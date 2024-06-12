@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -88,6 +89,33 @@
             background-color: #4a90e2;
             transition: width 1s;
         }
+
+        /* 黑色主题样式 */
+        body.dark-mode {
+            background: linear-gradient(135deg, #5B0000, #007777);
+        }
+        .loading.dark-mode {
+            background: #4c4c4c;
+            color: #EFEFEF;
+            box-shadow: 0 4px 8px rgba(100, 100, 100, 0.1);
+        }
+        .loading.dark-mode .url-text, .loading.dark-mode .countdown-text {
+            color: #EFEFEF;
+        }
+        .loading.dark-mode .cancel-button {
+            background-color: #872C2C;
+            color: #FFF;
+        }
+        .loading.dark-mode .confirm-button {
+            background-color: #28566F;
+            color: #FFF;
+        }
+        .loading.dark-mode .progress-bar {
+            background-color: #444;
+        }
+        .loading.dark-mode .progress {
+            background-color: #888;
+        }
     </style>
     <script type="text/javascript">
         const host = window.location.host;
@@ -153,7 +181,16 @@
             window.close();
         }
 
+        function applyDarkMode() {
+            var hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.loading').classList.add('dark-mode');
+            }
+        }
+
         window.onload = function() {
+            applyDarkMode();
             progressElement = document.getElementById('progress');
             countdownElement = document.getElementById('countdown');
             jumpUrlElement = document.getElementById('jump-url');

@@ -1,7 +1,7 @@
 {
   "name": "hexo-safego",
-  "version": "1.0.1",
-  "description": "Hexo plugin for safe external link redirection with base64 encoding and domain whitelisting",
+  "version": "1.0.2",
+  "description": "✨Hexo plugin for safe external link redirection with base64 encoding, domain whitelisting, and support for a custom redirect page.",
   "main": "index.js",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12"
