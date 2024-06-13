@@ -1,67 +1,67 @@
-## hexo-safego
+# hexo-safego
 
-[NPM发布地址](https://www.npmjs.com/package/hexo-safego)
+[Hexo-Safego on NPM](https://www.npmjs.com/package/hexo-safego)
 
-`hexo-safego` 是一个改进版的 Hexo 插件，用于处理外部链接以增强博客的安全性。该插件基于 [`hexo-external-link`](https://github.com/hvnobug/hexo-external-link) 二次开发，但其实现方式不同：原版插件通过注入 JS ，在打开网站时才处理外部链接，而 `hexo-safego` 则在生成静态页面时直接替换外部链接，并且提供了很多人性化的配置。
+`hexo-safego` is an enhanced Hexo plugin designed to handle external links to improve the security of your blog. This plugin is a re-development based on [`hexo-external-link`](https://github.com/hvnobug/hexo-external-link), but it implements a different approach: while the original plugin injects JS to process external links when the site is opened, `hexo-safego` directly replaces external links when generating static pages and provides numerous user-friendly configurations.
 
-**注意：该插件由于刚发版,再加上近几天比较忙，暂时并不完善，仍在一直测试阶段，配置不适配更新比较频繁，如果无法运行，可以选择同类替代产品，如：[安全跳转页面重制版](https://blog.qyliu.top/posts/9efc1657/)，等测试期结束后，我将会推出兼容性良好的版本，如果感兴趣可以star以关注后续更新！**
+**Note: This plugin is in its early release stage and might not be fully stable. The configurations are subject to frequent updates. If it doesn't work for you, consider using alternative products like [Security Redirect Page](https://blog.qyliu.top/posts/9efc1657/). For future updates, you can star the repository to stay tuned!**
 
-### 主要特性
+## Key Features
 
-- **外部链接跳转**：将外部链接替换为自定义的跳转页面，增加安全性。
-- **灵活配置**：支持多个容器 ID、白名单域名和生效页面路径的配置。
-- **Base64 编码**：可选的 Base64 编码功能。
-- **调试模式**：调试模式输出详细信息，便于开发和调试。
-- **自定义页面**：本插件自定义页面简单明了，完全可以进行自定义以达到自己的要求，目前初步支持暗黑模式。
-- **自定义化**：目前支持设置标题，副标题，头像，暗黑模式时间等，不过不稳定请谨慎更新，添加了一些参数
+- **External Link Redirection**: Replace external links with custom redirection pages to enhance security.
+- **Flexible Configuration**: Support multiple container IDs, whitelisted domains, and specified page paths.
+- **Base64 Encoding**: Optional Base64 encoding feature.
+- **Debug Mode**: Outputs detailed information for easier development and debugging.
+- **Customizable Page**: The plugin's customizable page is straightforward, allowing full customization to meet your requirements, currently with preliminary support for dark mode.
+- **Personalization**: Supports setting title, subtitle, avatar, and dark mode time. However, due to ongoing testing, use with caution and update carefully.
 
-### 安装
- 
-在使用该插件之前，需要先安装 `cheerio`，hexo一般有这个插件，可以在 `node_module` 查看，如果没有，执行：
+## Installation
+
+Before using the plugin, ensure `cheerio` is installed. Hexo typically includes this plugin; you can check in `node_modules`. If not, run:
 
 ```bash
 npm install cheerio --save
 ```
 
-然后安装 `hexo-safego` 插件：
+Then install `hexo-safego` plugin:
 
 ```bash
 npm install hexo-safego --save
 ```
 
-### Hexo-Safego 插件配置更新
+## Configuration
 
-在 Hexo 的配置文件 `_config.yml` 中添加或更新以下配置（比较繁杂，正在测试，后面会去掉不使用的内容）：
+Add or update the following configuration in your Hexo `_config.yml` file (currently complex due to ongoing testing; unnecessary content will be removed in future updates):
 
 ```yaml
 hexo_safego:
-  enable: true  # 是否启用 hexo-safego 插件
-  enable_base64_encode: true  # 是否启用 Base64 编码链接
-  url_param_name: 'u'  # URL 参数名，用于生成跳转链接
-  html_file_name: 'go.html'  # 跳转页面文件名
-  target_blank: true  # 是否在跳转链接中添加 target="_blank"
-  link_rel: 'external nofollow noopener noreferrer'  # 跳转链接的 rel 属性
-  ignore_attrs:  # 需要忽略的链接属性列表
+  enable: true  # Enable hexo-safego plugin
+  enable_base64_encode: true  # Enable Base64 encoding for links
+  url_param_name: 'u'  # URL parameter name for generating redirect links
+  html_file_name: 'go.html'  # Redirect page file name
+  target_blank: true  # Add target="_blank" to redirect links
+  link_rel: 'external nofollow noopener noreferrer'  # Rel attribute for redirect links
+  ignore_attrs:  # List of link attributes to ignore
     - 'data-fancybox'
     - 'ignore-external-link'
-  container_ids:  # 容器 ID 列表，如果为空则匹配整个 body
+  container_ids:  # List of container IDs, if empty, match the whole body
     - 'article-container'
-  domain_whitelist:  # 域名白名单列表，包含白名单中的域名的链接将被忽略
-  apply_pages:  # 生效页面路径列表，只有在这些页面上才会对链接进行处理
+  domain_whitelist:  # List of whitelisted domains, links containing these domains will be ignored
+  apply_pages:  # List of page paths where the plugin will take effect
     - '/posts/'
-  debug: false  # 是否启用调试模式，开启后会输出详细的调试信息
-  avatar: "https://pic.imgdb.cn/item/6633cb0b0ea9cb1403cc54a4.webp"  # 头像图片链接
-  title: "清羽飞扬"  # 标题
-  subtitle: "安全中心"  # 副标题
-  darkmode:  # 夜间模式配置
+  debug: false  # Enable debug mode to output detailed information
+  avatar: "https://pic.imgdb.cn/item/6633cb0b0ea9cb1403cc54a4.webp"  # Avatar image URL
+  title: "QingYu FeiYang"  # Title
+  subtitle: "Security Center"  # Subtitle
+  darkmode:  # Dark mode configuration
     enable: true
-    start: 18  # 夜间模式开始时间
-    end: 6  # 夜间模式结束时间
+    start: 18  # Dark mode start time
+    end: 6  # Dark mode end time
 ```
 
-### 插件主要代码实现
+## Key Implementation
 
-以下是 `hexo-safego` 插件的关键代码实现，主要通过 `cheerio` 来解析和处理 HTML 内容：
+The following is the key implementation of the `hexo-safego` plugin, mainly using `cheerio` to parse and process HTML content:
 
 ```javascript
 const cheerio = require('cheerio');
@@ -76,13 +76,13 @@ const config = hexo.config.hexo_safego = Object.assign({
     safety_chain: false,
     link_rel: 'external nofollow noopener noreferrer',
     ignore_attrs: [],
-    container_ids: ['article-container'],  // 容器ID列表，如果为空则匹配body
-    domain_whitelist: [],  // 域名白名单列表
-    apply_pages: ['/posts/'],  // 生效页面路径列表
-    debug: false,  // 调试参数，默认为false
+    container_ids: ['article-container'],  // List of container IDs, if empty, match the whole body
+    domain_whitelist: [],  // List of whitelisted domains
+    apply_pages: ['/posts/'],  // List of page paths where the plugin will take effect
+    debug: false,  // Debug mode, default is false
     avatar: "https://pic.imgdb.cn/item/6633cb0b0ea9cb1403cc54a4.webp",
-    title: "清羽飞扬",
-    subtitle: "安全中心",
+    title: "QingYu FeiYang",
+    subtitle: "Security Center",
     darkmode: {
         enable: true,
         start: 18,
@@ -109,7 +109,7 @@ if (config.enable) {
 
         const isPathInApplyPages = config.apply_pages.some(page => {
             if (page === '/') {
-                return true;  // 如果设置为 '/'，则对所有页面生效
+                return true;  // If set to '/', the plugin will apply to all pages
             }
             return currentPath.startsWith(page);
         });
@@ -173,9 +173,9 @@ if (config.enable) {
 }
 ```
 
-### 跳转页面生成
+## Redirect Page Generation
 
-插件会根据配置自动生成一个 `go.html` 文件，作为跳转页面。以下是生成跳转页面的代码：
+The plugin will automatically generate a `go.html` file as a redirect page based on the configuration. The following is the code for generating the redirect page:
 
 ```javascript
 'use strict';
@@ -217,7 +217,3 @@ module.exports = function (locals) {
     };
 };
 ```
-
-### 总结
-
-`hexo-safego` 提供了一种灵活且安全的方式来处理外部链接，通过在生成页面时直接替换外部链接，提高了网站的安全性和可控性。配置简单易用，适用于需要增强外部链接安全性的 Hexo 博客用户。

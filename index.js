@@ -13,7 +13,15 @@ const config = hexo.config.hexo_safego = Object.assign({
     container_ids: ['article-container'], // 容器ID列表，如果为空则匹配body
     domain_whitelist: [], // 域名白名单列表
     apply_pages: ['/posts/'], // 生效页面路径列表
-    debug: false // 调试参数，默认为false
+    debug: false, // 调试参数，默认为false
+    avatar: "https://pic.imgdb.cn/item/6633cb0b0ea9cb1403cc54a4.webp",
+    title: "清羽飞扬",
+    subtitle: "安全中心",
+    darkmode: {
+        enable: true,
+        start: 18,
+        end: 6
+    }
 }, hexo.config.hexo_safego);
 
 const default_ignore_attrs = ['data-fancybox', 'ignore-external-link'];

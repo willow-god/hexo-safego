@@ -15,15 +15,36 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .avatar-placeholder, .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .avatar {
+            display: none;
+        }
+        .description {
+            font-size: 18px;
+        }
+        .subsitle {
+            font-size: 12px;
+            margin-bottom: 20px;
+            color: #C4C4C4;
         }
         .loading {
             text-align: center;
             background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
+            padding: 30px;
             border-radius: 18px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             animation: fadein 2s;
-            width: 300px;
+            width: 400px;
+            max-width: 90%;
         }
         @keyframes fadein {
             from { opacity: 0; }
@@ -32,20 +53,25 @@
         .content {
             margin-bottom: 20px;
         }
-        .url-text, .countdown-text {
+        .url-text {
             margin-bottom: 10px;
             color: #333;
             font-size: 16px;
             letter-spacing: 1px;
         }
-        .url-text span {
-            color: red;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
+        .jump-url {
+            font-size: 20px;
+            background-color: #F7F9FE;
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            height: 25px;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: normal;
         }
         .countdown-text {
             margin-top: 12px;
@@ -55,7 +81,7 @@
         .button-container {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 20%;
             margin-top: 20px;
         }
         .button {
@@ -99,7 +125,15 @@
             color: #EFEFEF;
             box-shadow: 0 4px 8px rgba(100, 100, 100, 0.1);
         }
+        .description.dark-mode {
+            color: #F3F3F3;
+        }
         .loading.dark-mode .url-text, .loading.dark-mode .countdown-text {
+            color: #EFEFEF;
+        }
+        .loading.dark-mode .jump-url {
+            border: 1px solid #777;
+            background-color: #333;
             color: #EFEFEF;
         }
         .loading.dark-mode .cancel-button {
@@ -183,14 +217,30 @@
 
         function applyDarkMode() {
             var hour = new Date().getHours();
-            if (hour >= 18 || hour < 6) {
+            if (hour >= {{darkmode_start}} || hour < {{darkmode_end}}) {
                 document.body.classList.add('dark-mode');
                 document.querySelector('.loading').classList.add('dark-mode');
+                document.querySelector('.description').classList.add('dark-mode');
             }
+        }
+        
+        function loadAvatar() {
+            const avatarImg = document.querySelector('.avatar');
+            const placeholder = document.querySelector('.avatar-placeholder');
+            const img = new Image();
+            img.src = '{{avatar}}';
+            img.onload = function() {
+                avatarImg.src = img.src;
+                avatarImg.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
         }
 
         window.onload = function() {
+            {% if (darkmode_enable) %}
             applyDarkMode();
+            {% endif %}
+            loadAvatar();
             progressElement = document.getElementById('progress');
             countdownElement = document.getElementById('countdown');
             jumpUrlElement = document.getElementById('jump-url');
@@ -201,11 +251,16 @@
     </script>
 </head>
 <body>
+    <div class="avatar-placeholder"></div>
+    <img src="" alt="头像" class="avatar">
+    <div class="description">{{title}}</div>
+    <div class="subsitle">{{subtitle}}</div>
     <div class="loading">
         <div class="content">
-            <div class="url-text">即将跳转到：<span id="jump-url"></span></div>
+            <div class="url-text">您即将离开本站，跳转到：</div>
+            <div class="jump-url" id="jump-url"></div>
         </div>
-        <div class="countdown-text">将在 <span id="countdown">5</span> 秒后跳转</div>
+        <div class="countdown-text">⚠将在 <span id="countdown">5</span> 秒后跳转，请自行确认链接安全性</div>
         <div class="progress-bar">
             <div class="progress" id="progress"></div>
         </div>
