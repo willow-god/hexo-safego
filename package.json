@@ -1,6 +1,6 @@
 {
   "name": "hexo-safego",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "✨Hexo plugin for safe external link redirection with base64 encoding, domain whitelisting, and support for a custom redirect page.",
   "main": "index.js",
   "dependencies": {
@@ -32,5 +32,5 @@
   "bugs": {
     "url": "https://github.com/willow-god/hexo-safego/issues"
   },
-  "homepage": "https://github.com/willow-god/hexo-safego#readme"
+  "homepage": "https://blog.qyliu.top/posts/1dfd1f41/"
 }

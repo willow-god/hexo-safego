@@ -1,219 +1,157 @@
-# hexo-safego
+[简体中文](README.md) | English
 
-[Hexo-Safego on NPM](https://www.npmjs.com/package/hexo-safego)
+## hexo-safego
 
-`hexo-safego` is an enhanced Hexo plugin designed to handle external links to improve the security of your blog. This plugin is a re-development based on [`hexo-external-link`](https://github.com/hvnobug/hexo-external-link), but it implements a different approach: while the original plugin injects JS to process external links when the site is opened, `hexo-safego` directly replaces external links when generating static pages and provides numerous user-friendly configurations.
+[NPM Page](https://www.npmjs.com/package/hexo-safego) | [Detailed Documentation](https://blog.qyliu.top/posts/1dfd1f41/)
 
-**Note: This plugin is in its early release stage and might not be fully stable. The configurations are subject to frequent updates. If it doesn't work for you, consider using alternative products like [Security Redirect Page](https://blog.qyliu.top/posts/9efc1657/). For future updates, you can star the repository to stay tuned!**
+`hexo-safego` is an improved Hexo plugin designed to handle external links to enhance blog security. This plugin is a secondary development based on [`hexo-external-link`](https://github.com/hvnobug/hexo-external-link), but its implementation is different: the original plugin injects JS to process external links when opening the website, while `hexo-safego` replaces external links directly when generating static pages and provides many user-friendly configurations.
 
-## Key Features
+### Main Features
 
-- **External Link Redirection**: Replace external links with custom redirection pages to enhance security.
-- **Flexible Configuration**: Support multiple container IDs, whitelisted domains, and specified page paths.
-- **Base64 Encoding**: Optional Base64 encoding feature.
-- **Debug Mode**: Outputs detailed information for easier development and debugging.
-- **Customizable Page**: The plugin's customizable page is straightforward, allowing full customization to meet your requirements, currently with preliminary support for dark mode.
-- **Personalization**: Supports setting title, subtitle, avatar, and dark mode time. However, due to ongoing testing, use with caution and update carefully.
+- **External Link Redirection**: Replace external links with a custom redirection page to increase security.
+- **Flexible Configuration**: Supports multiple container IDs, whitelisted domains, and applicable page paths.
+- **Base64 Encoding**: Optional Base64 encoding for links.
+- **Debug Mode**: Outputs detailed information in debug mode, making development and debugging easier.
+- **Custom Page**: Supports setting title, subtitle, avatar, dark mode, and more.
 
-## Installation
+### Installation
 
-Before using the plugin, ensure `cheerio` is installed. Hexo typically includes this plugin; you can check in `node_modules`. If not, run:
+Before using this plugin, you need to install `cheerio`. Hexo usually has this plugin, and you can check it in `node_modules`. If not, run:
 
 ```bash
 npm install cheerio --save
 ```
 
-Then install `hexo-safego` plugin:
+Then install the `hexo-safego` plugin:
 
 ```bash
 npm install hexo-safego --save
 ```
 
-## Configuration
+### Configuration
 
-Add or update the following configuration in your Hexo `_config.yml` file (currently complex due to ongoing testing; unnecessary content will be removed in future updates):
+Add or update the following configuration in Hexo's `_config.yml` file:
 
 ```yaml
+# hexo-safego security redirection plugin
+# see https://blog.qyliu.top/posts/1dfd1f41/
 hexo_safego:
   enable: true  # Enable hexo-safego plugin
   enable_base64_encode: true  # Enable Base64 encoding for links
-  url_param_name: 'u'  # URL parameter name for generating redirect links
-  html_file_name: 'go.html'  # Redirect page file name
-  target_blank: true  # Add target="_blank" to redirect links
-  link_rel: 'external nofollow noopener noreferrer'  # Rel attribute for redirect links
+  enable_target_blank: true  # Add target="_blank" to redirection links
+  url_param_name: 'u'  # URL parameter name for generating redirection links
+  html_file_name: 'go.html'  # Redirection page filename
   ignore_attrs:  # List of link attributes to ignore
     - 'data-fancybox'
-    - 'ignore-external-link'
-  container_ids:  # List of container IDs, if empty, match the whole body
-    - 'article-container'
+  apply_containers:  # List of container IDs to apply the plugin to, matches entire body if empty
+    - '#article-container'
   domain_whitelist:  # List of whitelisted domains, links containing these domains will be ignored
-  apply_pages:  # List of page paths where the plugin will take effect
+    - 'qyliu.top'
+  apply_pages:  # List of page paths to apply the plugin to, only links on these pages will be processed
     - '/posts/'
-  debug: false  # Enable debug mode to output detailed information
-  avatar: "https://pic.imgdb.cn/item/6633cb0b0ea9cb1403cc54a4.webp"  # Avatar image URL
-  title: "QingYu FeiYang"  # Title
+  avatar: /info/avatar.ico  # Avatar image link
+  title: "Qingyu Feiyang"  # Title
   subtitle: "Security Center"  # Subtitle
-  darkmode:  # Dark mode configuration
-    enable: true
-    start: 18  # Dark mode start time
-    end: 6  # Dark mode end time
+  darkmode: false  # Enable dark mode
+  debug: false  # Enable debug mode, outputs detailed debug information
 ```
 
-## Key Implementation
+### Required Modifications
 
-The following is the key implementation of the `hexo-safego` plugin, mainly using `cheerio` to parse and process HTML content:
+- **`domain_whitelist`**: This parameter is your site's root domain. This part uses string matching; if the external link contains the string you filled in, the external link will be skipped. You can set multiple domains.
+- **`apply_containers`**: This parameter is the container selector you need. If you need a class selector, you can use `.classname` to filter. If you need to match the entire site, fill in `body` or leave it empty. Here, since I am using the Butterfly theme, I filled in the Butterfly article part selector `#article-container`.
+- **`apply_pages`**: This parameter specifies the applicable pages. If you only want to use it on article pages, you can configure it as I did.
+- **`avatar、title、subtitle`**: Please set these to your information to speed up avatar loading, as the default avatar is a `jsdelivr` image, which may affect loading speed in China.
+- **Note**: The above configuration does not include null checks, so do not leave them empty. If you don't need a configuration and want to use the default, delete the corresponding configuration!
 
-```javascript
-const cheerio = require('cheerio');
+With the above configuration, you can better customize the behavior and appearance of the `hexo-safego` plugin to ensure safer and more compliant external link processing.
 
-const config = hexo.config.hexo_safego = Object.assign({
-    enable: false,
-    enable_base64_encode: true,
-    url_param_name: 'u',
-    html_file_name: 'go.html',
-    target_blank: true,
-    domain: '',
-    safety_chain: false,
-    link_rel: 'external nofollow noopener noreferrer',
-    ignore_attrs: [],
-    container_ids: ['article-container'],  // List of container IDs, if empty, match the whole body
-    domain_whitelist: [],  // List of whitelisted domains
-    apply_pages: ['/posts/'],  // List of page paths where the plugin will take effect
-    debug: false,  // Debug mode, default is false
-    avatar: "https://pic.imgdb.cn/item/6633cb0b0ea9cb1403cc54a4.webp",
-    title: "QingYu FeiYang",
-    subtitle: "Security Center",
-    darkmode: {
-        enable: true,
-        start: 18,
-        end: 6
-    }
-}, hexo.config.hexo_safego);
+### Configuration Parameters
 
-const default_ignore_attrs = ['data-fancybox', 'ignore-external-link'];
-const ignore_attrs = Array.from(new Set(default_ignore_attrs.concat(config.ignore_attrs)));
-const root = hexo.config.root || '/';
+#### `enable`
 
-if (config.enable) {
-    hexo.extend.filter.register('after_render:html', function (htmlContent, data) {
-        const $ = cheerio.load(htmlContent);
+- **Type**: `Boolean`
+- **Default**: `false`
+- **Description**: Whether to enable the `hexo-safego` plugin.
 
-        if (config.debug) {
-            console.log("Processing links within specified containers:", config.container_ids);
-        }
+#### `enable_base64_encode`
 
-        const currentPath = '/' + data.path;
-        if (config.debug) {
-            console.log("Current page path:", currentPath);
-        }
+- **Type**: `Boolean`
+- **Default**: `true`
+- **Description**: Whether to Base64 encode the redirection links.
 
-        const isPathInApplyPages = config.apply_pages.some(page => {
-            if (page === '/') {
-                return true;  // If set to '/', the plugin will apply to all pages
-            }
-            return currentPath.startsWith(page);
-        });
+#### `enable_target_blank`
 
-        if (!isPathInApplyPages) {
-            if (config.debug) {
-                console.log("Current page path is not in the apply_pages list, skipping link processing.");
-            }
-            return htmlContent;
-        }
+- **Type**: `Boolean`
+- **Default**: `true`
+- **Description**: Whether to add `target="_blank"` to the redirection links.
 
-        const containers = config.container_ids.length ? config.container_ids : ['body'];
+#### `url_param_name`
 
-        containers.forEach(id => {
-            const selector = id === 'body' ? 'body a' : `#${id} a`;
-            $(selector).each(function() {
-                const $this = $(this);
-                const href = $this.attr('href');
+- **Type**: `String`
+- **Default**: `u`
+- **Description**: The URL parameter name for the redirection page.
 
-                if (!href) return;
+#### `html_file_name`
 
-                const hasAttr = ignore_attrs.some(attr => $this.attr(attr) !== undefined);
-                if (hasAttr) {
-                    if (config.debug) {
-                        console.log("Link ignored due to attribute match:", href);
-                    }
-                    return;
-                }
+- **Type**: `String`
+- **Default**: `go.html`
+- **Description**: The filename of the generated redirection page.
 
-                const isLinkInWhitelist = config.domain_whitelist.some(whitelistDomain => href.includes(whitelistDomain));
-                if (isLinkInWhitelist) {
-                    if (config.debug) {
-                        console.log("Link in whitelist, ignoring link:", href);
-                    }
-                    return;
-                }
+#### `ignore_attrs`
 
-                if (href.match('^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)')) {
-                    const strs = href.split('/');
-                    if (strs.length >= 3) {
-                        const host = strs[2];
-                        if (host !== config.domain) {
-                            if (config.debug) {
-                                console.log("External link detected:", href);
-                            }
-                            const encodedHref = config.enable_base64_encode ? Buffer.from(href).toString('base64') : href;
-                            const newHref = `${root}${config.html_file_name}?${config.url_param_name}=${encodedHref}`;
-                            $this.attr('href', newHref).attr('rel', config.link_rel);
-                            if (config.target_blank) {
-                                $this.attr('target', '_blank');
-                            }
-                        }
-                    }
-                }
-            });
-        });
+- **Type**: `Array`
+- **Default**: `['data-fancybox']`
+- **Description**: List of link attributes to ignore. Links containing these attributes will not be processed.
 
-        return $.html();
-    });
-    hexo.extend.generator.register('external_link', require('./lib/generator'));
-}
-```
+#### `apply_containers`
 
-## Redirect Page Generation
+- **Type**: `Array`
+- **Default**: `['#article-container']`
+- **Description**: List of container IDs to apply the plugin to. If empty, the entire `body` will be matched.
 
-The plugin will automatically generate a `go.html` file as a redirect page based on the configuration. The following is the code for generating the redirect page:
+#### `domain_whitelist`
 
-```javascript
-'use strict';
+- **Type**: `Array`
+- **Default**: `[]`
+- **Description**: List of whitelisted domains. Links containing these domains will be ignored.
 
-const nunjucks = require('nunjucks');
-const env = new nunjucks.Environment();
-const pathFn = require('path');
-const fs = require('fs');
+#### `apply_pages`
 
-env.addFilter('uriencode', str => {
-    return encodeURI(str);
-});
+- **Type**: `Array`
+- **Default**: `['/posts/']`
+- **Description**: List of page paths to apply the plugin to. Only links on these pages will be processed. To apply the plugin to the entire site, set it to `['/']`.
 
-env.addFilter('noControlChars', str => {
-    return str.replace(/[\x00-\x1F\x7F]/g, '');
-});
+#### `avatar`
 
-const goTmplSrc = pathFn.join(__dirname, '../go.html');
-const template = nunjucks.compile(fs.readFileSync(goTmplSrc, 'utf8'), env);
+- **Type**: `String`
+- **Default**: `https://fastly.jsdelivr.net/gh/willow-god/hexo-safego@latest/lib/avatar.png`
+- **Description**: The avatar image link for the redirection page.
 
-module.exports = function (locals) {
-    const config = this.config;
-    const fel_config = config.hexo_safego;
-    const html = template.render({
-        url_param_name: fel_config.url_param_name,
-        enable_base64_encode: fel_config.enable_base64_encode,
-        domain: fel_config.domain,
-        safety_chain: fel_config.safety_chain,
-        avatar: fel_config.avatar,
-        title: fel_config.title,
-        subtitle: fel_config.subtitle,
-        darkmode_enable: fel_config.darkmode.enable,
-        darkmode_start: fel_config.darkmode.start,
-        darkmode_end: fel_config.darkmode.end,
-    });
-    return {
-        path: fel_config.html_file_name,
-        data: html
-    };
-};
-```
+#### `title`
+
+- **Type**: `String`
+- **Default**: `Site Name`
+- **Description**: The title of the redirection page.
+
+#### `subtitle`
+
+- **Type**: `String`
+- **Default**: `Site Subtitle`
+- **Description**: The subtitle of the redirection page.
+
+#### `darkmode`
+
+- **Type**: `Boolean`
+- **Default**: `false`
+- **Description**: Whether to enable dark mode.
+
+#### `debug`
+
+- **Type**: `Boolean`
+- **Default**: `false`
+- **Description**: Whether to enable debug mode. Outputs detailed debug information when enabled.
+
+### Issue Reporting
+
+If you have any issues, please open an issue or contact the author via email at 01@liushen.fun, or ask questions on the website: https://blog.qyliu.top

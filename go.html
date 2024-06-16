@@ -8,7 +8,6 @@
     <title>页面加载中，请稍候...</title>
     <style type="text/css">
         body {
-            background: linear-gradient(135deg, #BFFFFF, #FFDDEE);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -31,17 +30,15 @@
         .description {
             font-size: 18px;
         }
-        .subsitle {
+        .subtitle {
             font-size: 12px;
             margin-bottom: 20px;
             color: #C4C4C4;
         }
         .loading {
             text-align: center;
-            background: rgba(255, 255, 255, 0.9);
             padding: 30px;
             border-radius: 18px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             animation: fadein 2s;
             width: 400px;
             max-width: 90%;
@@ -55,18 +52,15 @@
         }
         .url-text {
             margin-bottom: 10px;
-            color: #333;
             font-size: 16px;
             letter-spacing: 1px;
         }
         .jump-url {
             font-size: 20px;
-            background-color: #F7F9FE;
             display: block;
             margin-top: 5px;
             margin-bottom: 25px;
             padding: 15px;
-            border: 1px solid #ccc;
             border-radius: 8px;
             height: 25px;
             white-space: nowrap;
@@ -76,7 +70,6 @@
         .countdown-text {
             margin-top: 12px;
             font-size: 12px;
-            color: #515151;
         }
         .button-container {
             display: flex;
@@ -94,16 +87,13 @@
             height: 40px;
         }
         .cancel-button {
-            background-color: #80FFFF;
             color: black;
         }
         .confirm-button {
-            background-color: #4a90e2;
             color: white;
         }
         .progress-bar {
             width: 100%;
-            background-color: linear-gradient(135deg, #FF80FF, #00FFFF);
             border-radius: 5px;
             overflow: hidden;
             height: 10px;
@@ -112,44 +102,74 @@
         .progress {
             width: 100%;
             height: 100%;
-            background-color: #4a90e2;
             transition: width 1s;
         }
 
-        /* 黑色主题样式 */
-        body.dark-mode {
-            background: linear-gradient(135deg, #5B0000, #007777);
+        {% if darkmode %}
+        body {
+            background: linear-gradient(135deg, #364f6b, #222831);
         }
-        .loading.dark-mode {
-            background: #4c4c4c;
+        .loading {
+            background: #393e46;
             color: #EFEFEF;
             box-shadow: 0 4px 8px rgba(100, 100, 100, 0.1);
         }
-        .description.dark-mode {
+        .description {
             color: #F3F3F3;
         }
-        .loading.dark-mode .url-text, .loading.dark-mode .countdown-text {
+        .url-text, .countdown-text {
             color: #EFEFEF;
         }
-        .loading.dark-mode .jump-url {
+        .jump-url {
             border: 1px solid #777;
             background-color: #333;
             color: #EFEFEF;
         }
-        .loading.dark-mode .cancel-button {
+        .cancel-button {
             background-color: #872C2C;
             color: #FFF;
         }
-        .loading.dark-mode .confirm-button {
+        .confirm-button {
             background-color: #28566F;
             color: #FFF;
         }
-        .loading.dark-mode .progress-bar {
+        .progress-bar {
             background-color: #444;
         }
-        .loading.dark-mode .progress {
+        .progress {
             background-color: #888;
         }
+        {% endif %}
+
+        {% if not darkmode %}
+        body {
+            background: linear-gradient(135deg, #fce38a, #eaffd0);
+        }
+        .loading {
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .url-text {
+            color: #333;
+        }
+        .jump-url {
+            border: 1px solid #ccc;
+            background-color: #F7F9FE;
+            color: #333;
+        }
+        .countdown-text {
+            color: #515151;
+        }
+        .cancel-button {
+            background-color: #a6e3e9;
+        }
+        .confirm-button {
+            background-color: #3fc1c9;
+        }
+        .progress {
+            background-color: #abedd8;
+        }
+        {% endif %}
     </style>
     <script type="text/javascript">
         const host = window.location.host;
@@ -175,7 +195,7 @@
         }
 
         var jump_url = GetQueryString('{{url_param_name}}');
-        {% if(enable_base64_encode) %}
+        {% if enable_base64_encode %}
         jump_url = base64Decode(jump_url);
         {% endif %}
         var UrlReg = '^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)';
@@ -201,27 +221,12 @@
         }
 
         function jump() {
-            {% if (safety_chain) %}
-            if (document.location.hostname !== 'localhost' && document.location.hostname !== '{{domain}}') {
-                location.href = '//' + host;
-                return;
-            }
-            {% endif %}
             location.href = jump_url;
         }
 
         function closeWindow() {
             window.opener = null;
             window.close();
-        }
-
-        function applyDarkMode() {
-            var hour = new Date().getHours();
-            if (hour >= {{darkmode_start}} || hour < {{darkmode_end}}) {
-                document.body.classList.add('dark-mode');
-                document.querySelector('.loading').classList.add('dark-mode');
-                document.querySelector('.description').classList.add('dark-mode');
-            }
         }
         
         function loadAvatar() {
@@ -237,14 +242,10 @@
         }
 
         window.onload = function() {
-            {% if (darkmode_enable) %}
-            applyDarkMode();
-            {% endif %}
             loadAvatar();
             progressElement = document.getElementById('progress');
             countdownElement = document.getElementById('countdown');
             jumpUrlElement = document.getElementById('jump-url');
-
             jumpUrlElement.textContent = jump_url;
             updateCountdown();
         }
@@ -254,13 +255,13 @@
     <div class="avatar-placeholder"></div>
     <img src="" alt="头像" class="avatar">
     <div class="description">{{title}}</div>
-    <div class="subsitle">{{subtitle}}</div>
+    <div class="subtitle">{{subtitle}}</div>
     <div class="loading">
         <div class="content">
             <div class="url-text">您即将离开本站，跳转到：</div>
             <div class="jump-url" id="jump-url"></div>
         </div>
-        <div class="countdown-text">⚠将在 <span id="countdown">5</span> 秒后跳转，请自行确认链接安全性</div>
+        <div class="countdown-text">⚠ 将在 <span id="countdown">5</span> 秒后跳转，请自行确认链接安全性</div>
         <div class="progress-bar">
             <div class="progress" id="progress"></div>
         </div>
