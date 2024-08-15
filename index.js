@@ -7,19 +7,19 @@ const config = hexo.config.hexo_safego = Object.assign({
     url_param_name: 'u',
     html_file_name: 'go.html',
     ignore_attrs: ['data-fancybox'],
-    apply_containers: ['#article-container'], // 容器列表，如果为空则匹配整个body
-    apply_pages: ['/posts/'], // 生效页面路径列表
-    exclude_pages: ['/link/index.html'], // 排除页面路径列表
-    domain_whitelist: ["example.com"], // 域名白名单列表
+    apply_containers: [], // 容器列表，如果为空则匹配整个body
+    apply_pages: [], // 生效页面路径列表，如果为空则默认生效页面为/，也就是所有页面
+    exclude_pages: [], // 排除页面路径列表，如果为空则无排除页面
+    domain_whitelist: [], // 域名白名单列表
     darkmode: false, // 设置为true为暗色模式
     avatar: "https://fastly.jsdelivr.net/gh/willow-god/hexo-safego@latest/lib/avatar.png",
-    title: "网站名称",
-    subtitle: "网站副标题",
+    title: "请填写网站名称",
+    subtitle: "请填写网站副标题",
     debug: false // 调试参数，默认为false
 }, hexo.config.hexo_safego);
 
 const default_ignore_attrs = ['data-fancybox'];
-// 合并去重
+// 合并去重，防止为空值
 const ignore_attrs = Array.from(new Set(default_ignore_attrs.concat(config.ignore_attrs)));
 const root = hexo.config.root || '/';
 
@@ -28,7 +28,7 @@ if (config.enable) {
         const $ = cheerio.load(htmlContent);
 
         if (config.debug) {
-            console.log("[hexo-safego]调试模式===================================================");
+            console.log("[hexo-safego]调试模式,一格表示一个页面================================================");
             console.log("[hexo-safego]", "正在处理指定容器内的链接:", config.apply_containers);
         }
 
@@ -38,8 +38,13 @@ if (config.enable) {
             console.log("[hexo-safego]", "当前页面路径:", currentPath);
         }
 
-        const isPathInExcludePages = Array.isArray(config.exclude_pages) && config.exclude_pages.some(page => {
+        const excludePages = Array.isArray(config.exclude_pages) && config.exclude_pages.length > 0 ? config.exclude_pages : [];
+        const isPathInExcludePages = excludePages.some(page => {
             const normalizedPage = '/' + page.replace(/^\//, '');
+            if (config.debug) {
+                console.log("[hexo-safego]", "规范化的排除页面路径:", normalizedPage);
+                console.log("[hexo-safego]", "路径匹配结果:", currentPath.startsWith(normalizedPage));
+            }
             return currentPath.startsWith(normalizedPage);
         });
 
@@ -70,7 +75,7 @@ if (config.enable) {
             return htmlContent;
         }
 
-        const containers = Array.isArray(config.apply_containers) && config.apply_containers.length ? config.apply_containers : ['body'];
+        const containers = Array.isArray(config.apply_containers) && config.apply_containers.length > 0 ? config.apply_containers : ['body'];
         containers.forEach(id => {
             const selector = id === 'body' ? 'body a' : `${id} a`;
             $(selector).each(function() {
@@ -87,7 +92,8 @@ if (config.enable) {
                     return;
                 }
 
-                const isLinkInWhitelist = config.domain_whitelist.some(whitelistDomain => href.includes(whitelistDomain));
+                const domain_whitelist = Array.isArray(config.domain_whitelist) && config.domain_whitelist.length > 0 ? config.domain_whitelist : [];
+                const isLinkInWhitelist = domain_whitelist.some(whitelistDomain => href.includes(whitelistDomain));
                 if (isLinkInWhitelist) {
                     if (config.debug) {
                         console.log("[hexo-safego]", "链接在白名单中，忽略链接:", href);
