@@ -9,6 +9,7 @@ const config = hexo.config.hexo_safego = Object.assign({
     ignore_attrs: ['data-fancybox'],
     apply_containers: ['#article-container'], // 容器列表，如果为空则匹配整个body
     apply_pages: ['/posts/'], // 生效页面路径列表
+    exclude_pages: ['/link/index.html'], // 排除页面路径列表
     domain_whitelist: ["example.com"], // 域名白名单列表
     darkmode: false, // 设置为true为暗色模式
     avatar: "https://fastly.jsdelivr.net/gh/willow-god/hexo-safego@latest/lib/avatar.png",
@@ -35,6 +36,18 @@ if (config.enable) {
 
         if (config.debug) {
             console.log("[hexo-safego]", "当前页面路径:", currentPath);
+        }
+
+        const isPathInExcludePages = Array.isArray(config.exclude_pages) && config.exclude_pages.some(page => {
+            const normalizedPage = '/' + page.replace(/^\//, '');
+            return currentPath.startsWith(normalizedPage);
+        });
+
+        if (isPathInExcludePages) {
+            if (config.debug) {
+                console.log("[hexo-safego]", "当前页面路径在 exclude_pages 列表中，跳过链接处理。");
+            }
+            return htmlContent;
         }
 
         const applyPages = Array.isArray(config.apply_pages) && config.apply_pages.length > 0 ? config.apply_pages : ["/"];
