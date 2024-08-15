@@ -47,6 +47,8 @@ hexo_safego:
     - '#article-container'
   domain_whitelist:  # 域名白名单列表，包含白名单中的域名的链接将被忽略
     - 'qyliu.top'
+  exclude_pages:
+    - 'fcircle/index.html'
   apply_pages:  # 生效页面路径列表，只有在这些页面上才会对链接进行处理
     - '/posts/'
   avatar: /info/avatar.ico  # 头像图片链接
