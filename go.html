@@ -241,14 +241,14 @@
             };
         }
 
-        window.onload = function() {
+        window.addEventListener('load', function() {
             loadAvatar();
             progressElement = document.getElementById('progress');
             countdownElement = document.getElementById('countdown');
             jumpUrlElement = document.getElementById('jump-url');
             jumpUrlElement.textContent = jump_url;
             updateCountdown();
-        }
+        });        
     </script>
 </head>
 <body>
