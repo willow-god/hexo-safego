@@ -1,4 +1,4 @@
-name: Publish Node.js Package
+name: 发布NPM包
 
 on:
   release:
