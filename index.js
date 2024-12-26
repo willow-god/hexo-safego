@@ -96,7 +96,9 @@ if (config.general.enable) {
                 const $this = $(this);
                 const href = $this.attr('href');
 
-                if (!href) return;
+                if (!href) {
+                    return;
+                }
 
                 const hasAttr = ignore_attrs.some(attr => $this.attr(attr) !== undefined);
                 if (hasAttr) {
