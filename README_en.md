@@ -69,7 +69,7 @@ hexo_safego:
     avatar: /info/avatar.ico          # Path to the redirection page avatar
     title: "Clear Feather Flying"     # Redirection page title
     subtitle: "Safety Center"         # Redirection page subtitle
-    darkmode: false                   # Whether to enable dark mode
+    darkmode: auto                    # Whether to enable dark mode
     countdowntime: 4                  # Countdown seconds for redirection page, if set to negative number then no automatic redirection
 
   # Debug Settings
@@ -166,10 +166,10 @@ hexo_safego:
   - **Explanation**: Set the subtitle of the redirection page, usually used for a brief description of the website's content.
 
 - **`appearance.darkmode`**:  
-  - **Type**: `Boolean`
+  - **Type**: `Boolean`/`auto`
   - **Default Value**: `false`
   - **Description**: Whether to enable night mode.  
-  - **Explanation**: Set to `true` to enable dark mode for the redirection page, suitable for nighttime use.
+  - **Explanation**: Set to `true` to enable dark mode for the redirection page, suitable for nighttime use,Set to auto` to switch dark mode and light mode according to system theme setting.
 
 - **`appearance.countdowntime`**:  
   - **Type**: `Integer`

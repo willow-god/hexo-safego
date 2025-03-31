@@ -69,7 +69,7 @@ hexo_safego:
     avatar: /info/avatar.ico    # 跳转页面头像路径
     title: "清羽飞扬"            # 跳转页面标题
     subtitle: "安全中心"         # 跳转页面副标题
-    darkmode: false             # 是否启用深色模式
+    darkmode: auto              # 是否启用深色模式
     countdowntime: 4            # 跳转页面倒计时秒数，如果设置为负数则为不自动跳转
 
   # 调试设置
@@ -166,10 +166,10 @@ hexo_safego:
   - **说明**：设置跳转页面的副标题，通常用于简短描述网站的内容。
 
 - **`appearance.darkmode`**:  
-  - **类型**：`Boolean`
+  - **类型**：`Boolean`/`auto`
   - **默认值**：`false`
   - **描述**：是否启用夜间模式。  
-  - **说明**：设置为 `true` 时，跳转页面将启用暗色模式，适合夜间使用。
+  - **说明**：设置为 `true` 时，跳转页面将启用暗色模式，适合夜间使用，设置为`auto`时将会自动切换亮暗模式，根据系统的亮暗数据进行判断。
 
 - **`appearance.countdowntime`**:  
   - **类型**：`Integer`
