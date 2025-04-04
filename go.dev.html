@@ -381,24 +381,23 @@
 		  var r = window.location.search.substr(1).match(reg);
 		  return r ? decodeURI(r[2]) : null;
 		}
-		
-		function base64Decode(input) {
-		  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-		  let str = input.replace(/=+$/, '');
-		  let output = '';
-		  if (str.length % 4 == 1) {
-		    throw new Error("'atob' failed: The string to be decoded is not correctly encoded.");
-		  }
-		  for (let bc = 0, bs, buffer, idx = 0; buffer = str.charAt(idx++); ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer, bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0) {
-		    buffer = chars.indexOf(buffer)
-		  }
-		  return output;
-		}
+
+        function decodeSafeUrlParam(paramStr) {
+            // 将 URL 安全的字符还原为标准的 Base64 字符
+            const base64 = paramStr.replace(/-/g, '+').replace(/_/g, '/');
+
+            // 解码 Base64 后再还原 URL 编码
+            const decoded = decodeURIComponent(atob(base64).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join(''));
+
+            return decoded;
+        }
 		
 		let countdown = {{countdown}};
 		let jump_url = GetQueryString('{{url_param_name}}');
 		{% if enable_base64_encode %}
-		jump_url = base64Decode(jump_url);
+		jump_url = decodeSafeUrlParam(jump_url);
 		{% endif %}
 		const UrlReg = '^((http|https|thunder|qqdl|ed2k|Flashget|qbrowser|ftp|rtsp|mms)://)';
 		if (!jump_url || !jump_url.match(UrlReg)) {
@@ -478,7 +477,7 @@
 		  alert('链接已复制到剪贴板！');
 		}
 		
-		function loadAvatar() {
+		async function loadAvatar() {
 		  const avatarImg = document.querySelector('.avatar');
 		  const placeholder = document.querySelector('.avatar-placeholder');
 		  const img = new Image();
