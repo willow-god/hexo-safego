@@ -36,6 +36,15 @@ const default_ignore_attrs = ['data-fancybox'];
 const ignore_attrs = Array.from(new Set(default_ignore_attrs.concat(config.security.ignore_attrs)));
 const root = hexo.config.root || '/';
 
+function encodeSafeUrlParam(str) {
+    const base64 = btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+        (_, p1) => String.fromCharCode('0x' + p1)
+    ));
+
+    // 将 Base64 编码结果中的 "+" 和 "/" 转换为 URL 安全字符
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
 if (config.general.enable) {
     hexo.extend.filter.register('after_render:html', function (htmlContent, data) {
         const $ = cheerio.load(htmlContent);
@@ -124,7 +133,7 @@ if (config.general.enable) {
                         if (config.debug.enable) {
                             console.log("[hexo-safego]", "检测到外部链接并进行替换:", href);
                         }
-                        const encodedHref = config.general.enable_base64_encode ? Buffer.from(href).toString('base64') : href;
+                        const encodedHref = config.general.enable_base64_encode ? encodeSafeUrlParam(href) : href;
                         const newHref = `${root}${config.security.html_file_name}?${config.security.url_param_name}=${encodedHref}`;
                         $this.attr('href', newHref).attr('rel', 'external nofollow noopener noreferrer');
                         if (config.general.enable_target_blank) {
