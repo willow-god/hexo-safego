@@ -71,6 +71,7 @@ hexo_safego:
     subtitle: "安全中心"         # 跳转页面副标题
     darkmode: auto              # 是否启用深色模式
     countdowntime: 4            # 跳转页面倒计时秒数，如果设置为负数则为不自动跳转
+    custom_css: /css/go.css     # 自定义 CSS，可填相对路径或绝对 CSS 地址；留空则不插入
 
   # 调试设置
   debug:
@@ -174,8 +175,14 @@ hexo_safego:
 - **`appearance.countdowntime`**:  
   - **类型**：`Integer`
   - **默认值**：`4`
-  - **描述**：跳转页面倒计时秒数，如果设置为负数则为不自动跳转。  
+  - **描述**：跳转页面倒计时秒数，如果设置为负数则为不自动跳转。 
   - **说明**：该配置项设置了跳转页面的倒计时。设置为负数时，将禁用自动跳转。
+
+- **`appearance.custom_css`**:  
+  - **类型**：`String`
+  - **默认值**：`""`
+  - **描述**：跳转页面额外加载的自定义 CSS 路径。 
+  - **说明**：支持填写站点相对路径或完整的 CSS 地址；如果留空，则不会插入额外的 `<link rel="stylesheet">`。
 
 - **`debug.enable`**:  
   - **类型**：`Boolean`

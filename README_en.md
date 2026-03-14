@@ -71,6 +71,7 @@ hexo_safego:
     subtitle: "Safety Center"         # Redirection page subtitle
     darkmode: auto                    # Whether to enable dark mode
     countdowntime: 4                  # Countdown seconds for redirection page, if set to negative number then no automatic redirection
+    custom_css: /css/go.css           # Custom CSS, supports relative paths or absolute CSS URLs; leave empty to skip injection
 
   # Debug Settings
   debug:
@@ -176,6 +177,12 @@ hexo_safego:
   - **Default Value**: `4`
   - **Description**: Countdown seconds for the redirection page, if set to a negative number then no automatic redirection.  
   - **Explanation**: This sets the countdown for the redirection page. Setting it to a negative number disables automatic redirection.
+
+- **`appearance.custom_css`**:  
+  - **Type**: `String`
+  - **Default Value**: `""`
+  - **Description**: Extra custom CSS path loaded by the redirection page.  
+  - **Explanation**: Supports either a site-relative path or a full CSS URL. If left empty, no extra `<link rel="stylesheet">` tag will be inserted.
 
 - **`debug.enable`**:  
   - **Type**: `Boolean`

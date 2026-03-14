@@ -24,7 +24,8 @@ const config = hexo.config.hexo_safego = Object.assign({
         title: "请填写网站名称",
         subtitle: "请填写网站副标题",
         darkmode: false,       // 设置为true为暗色模式
-        countdowntime: -1      // 倒计时秒数
+        countdowntime: -1,     // 倒计时秒数
+        custom_css: ""         // 自定义CSS样式表路径或网络地址
     },
     debug: {
         enable: false          // 调试参数，默认为false
