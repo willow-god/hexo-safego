@@ -72,10 +72,25 @@ hexo_safego:
     darkmode: auto                    # Whether to enable dark mode
     countdowntime: 4                  # Countdown seconds for redirection page, if set to negative number then no automatic redirection
     custom_css: /css/go.css           # Custom CSS, supports relative paths or absolute CSS URLs; leave empty to skip injection
+    # Main redirect page texts (optional; defaults are Chinese)
+    leave_text: "You are leaving this site and will be redirected to:"
+    countdown_text: "⚡Redirecting in {seconds}s. Please confirm the link is safe."  # {seconds} is the countdown placeholder
+    manual_confirm_text: "💡Please confirm the link is safe before continuing"       # shown when countdowntime < 0
 
   # Debug Settings
   debug:
     enable: false               # Enable debug mode
+```
+
+### Disable Safe Redirect Per Page (Front-matter)
+
+Set `safego: false` in a post or page front-matter to skip safe-redirect processing for that page only:
+
+```yaml
+---
+title: Example Page
+safego: false
+---
 ```
 
 ### Necessary Parameter Modifications
@@ -122,7 +137,7 @@ hexo_safego:
   - **Type**: `Array`
   - **Default Value**: `['data-fancybox']`
   - **Description**: List of link attributes to ignore. If the link contains these attributes, it will not be processed.  
-  - **Explanation**: When a link element contains specified attributes, it will skip processing for that link. You can add other attributes to ignore specific links.
+  - **Explanation**: When a link element contains specified attributes, it will skip processing for that link. You can add other attributes to ignore specific links. An empty YAML value (`ignore_attrs:` with no items) is treated as unset and falls back to the default, so it no longer crashes or ignores all links by mistake.
 
 - **`scope.apply_containers`**:  
   - **Type**: `Array`
@@ -183,6 +198,28 @@ hexo_safego:
   - **Default Value**: `""`
   - **Description**: Extra custom CSS path loaded by the redirection page.  
   - **Explanation**: Supports either a site-relative path or a full CSS URL. If left empty, no extra `<link rel="stylesheet">` tag will be inserted.
+
+- **`appearance.leave_text`**:  
+  - **Type**: `String`
+  - **Default Value**: `您即将离开本站，跳转到：`
+  - **Description**: The “leaving this site” message on the redirection page.
+
+- **`appearance.countdown_text`**:  
+  - **Type**: `String`
+  - **Default Value**: `⚡将在{seconds}秒后跳转，请自行确认链接安全性`
+  - **Description**: Countdown message text.  
+  - **Explanation**: Use `{seconds}` as the countdown number placeholder.
+
+- **`appearance.manual_confirm_text`**:  
+  - **Type**: `String`
+  - **Default Value**: `💡请自行确认链接安全后再继续跳转`
+  - **Description**: Message shown when auto-redirect is disabled (`countdowntime < 0`).
+
+- **Front-matter `safego`**:  
+  - **Type**: `Boolean`
+  - **Default Value**: unset (enabled)
+  - **Description**: Disable safe redirect for a single post/page.  
+  - **Explanation**: When set to `false`, external links on that page will not be rewritten.
 
 - **`debug.enable`**:  
   - **Type**: `Boolean`

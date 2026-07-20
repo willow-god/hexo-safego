@@ -72,10 +72,25 @@ hexo_safego:
     darkmode: auto              # 是否启用深色模式
     countdowntime: 4            # 跳转页面倒计时秒数，如果设置为负数则为不自动跳转
     custom_css: /css/go.css     # 自定义 CSS，可填相对路径或绝对 CSS 地址；留空则不插入
+    # 跳转页主要文案（可选，不填则使用默认中文）
+    leave_text: "您即将离开本站，跳转到："
+    countdown_text: "⚡将在{seconds}秒后跳转，请自行确认链接安全性"  # {seconds} 为倒计时数字占位符
+    manual_confirm_text: "💡请自行确认链接安全后再继续跳转"          # countdowntime < 0 时显示
 
   # 调试设置
   debug:
     enable: false               # 启用调试模式
+```
+
+### 单页关闭安全跳转（Front-matter）
+
+在文章或页面的 front-matter 中设置 `safego: false`，可仅关闭该页的安全跳转处理：
+
+```yaml
+---
+title: 示例页面
+safego: false
+---
 ```
 
 ### 必要参数修改
@@ -122,7 +137,7 @@ hexo_safego:
   - **类型**：`Array`
   - **默认值**：`['data-fancybox']`
   - **描述**：需要忽略的链接属性列表。如果链接包含这些属性，将不会被处理。  
-  - **说明**：当链接元素包含指定的属性时，将跳过该链接的处理。可以添加其他属性以忽略特定链接。
+  - **说明**：当链接元素包含指定的属性时，将跳过该链接的处理。可以添加其他属性以忽略特定链接。若配置项留空（YAML 写成 `ignore_attrs:` 且无子项）会被视为未配置，自动回退默认值，不会再报错或误忽略全部链接。
 
 - **`scope.apply_containers`**:  
   - **类型**：`Array`
@@ -183,6 +198,28 @@ hexo_safego:
   - **默认值**：`""`
   - **描述**：跳转页面额外加载的自定义 CSS 路径。 
   - **说明**：支持填写站点相对路径或完整的 CSS 地址；如果留空，则不会插入额外的 `<link rel="stylesheet">`。
+
+- **`appearance.leave_text`**:  
+  - **类型**：`String`
+  - **默认值**：`您即将离开本站，跳转到：`
+  - **描述**：跳转页中“即将离开本站”提示文案。
+
+- **`appearance.countdown_text`**:  
+  - **类型**：`String`
+  - **默认值**：`⚡将在{seconds}秒后跳转，请自行确认链接安全性`
+  - **描述**：倒计时提示文案。  
+  - **说明**：`{seconds}` 为倒计时数字占位符。
+
+- **`appearance.manual_confirm_text`**:  
+  - **类型**：`String`
+  - **默认值**：`💡请自行确认链接安全后再继续跳转`
+  - **描述**：不自动跳转时（`countdowntime < 0`）显示的提示文案。
+
+- **Front-matter `safego`**:  
+  - **类型**：`Boolean`
+  - **默认值**：未设置（启用）
+  - **描述**：在单篇文章/页面中关闭安全跳转。  
+  - **说明**：设置为 `false` 时，该页面不会替换外部链接。
 
 - **`debug.enable`**:  
   - **类型**：`Boolean`

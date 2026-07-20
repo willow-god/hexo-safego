@@ -589,14 +589,16 @@
 
     function updateCountdown() {
       if (countdown < 0) {
-        countdownTextElement.textContent = "💡请自行确认链接安全后再继续跳转";
+        countdownTextElement.textContent = {{ manual_confirm_text | dump | safe }};
         if (progressElement) {
           progressElement.style.width = "100%";
         }
         return;
       }
 
-      countdownElement.textContent = countdown;
+      if (countdownElement) {
+        countdownElement.textContent = countdown;
+      }
       if (progressElement && {{countdown}} > 0) {
         progressElement.style.width = (countdown / {{countdown}} * 100) + "%";
       }
@@ -717,7 +719,7 @@
 
     <div class="loading" data-copy-state="idle">
       <div class="content">
-        <div class="url-text">您即将离开本站，跳转到：</div>
+        <div class="url-text">{{leave_text}}</div>
         <div class="jump-url" id="jump-url">
           <span class="jump-url-text" id="jump-url-text"></span>
           <div class="copy-btn-container">
@@ -731,7 +733,7 @@
         </div>
       </div>
 
-      <div class="countdown-text">⚡将在<span class="countdown-number" id="countdown"></span>秒后跳转，请自行确认链接安全性</div>
+      <div class="countdown-text">{{ countdown_text_html | safe }}</div>
       {% if countdown > 0 %}
       <div class="progress-bar">
         <div class="progress" id="progress"></div>
